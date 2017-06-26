@@ -1,0 +1,122 @@
+<canvas id="board" width="400" height="400"></canvas>
+<script>
+
+"use strict";
+
+var board = "";
+var context = "";
+
+var x_velocity = 0;
+var y_velocity = 0;
+
+var x_snake_position = 10;
+var y_snake_position = 10;
+
+var grid_size = 20;
+
+var tile_size = 20;
+
+// Thing to eat :D
+var x_apple = 15;
+var y_apple = 15;
+
+var trail = [];
+
+var tail = 5;
+
+function keyPush(evt) {
+
+    switch (evt.keyCode) {
+        // Left
+        case 37:
+            x_velocity = -1;
+            y_velocity = 0;
+            break;
+        // Up
+        case 38:
+            x_velocity = 0;
+            y_velocity = -1;
+            break;
+        // Right
+        case 39:
+            x_velocity = 1;
+            y_velocity = 0;
+            break;
+        // Down
+        case 40:
+            x_velocity = 0;
+            y_velocity = 1;
+            break;
+    }
+}
+
+function game() {
+
+    x_snake_position += x_velocity;
+    y_snake_position += y_velocity;
+
+    // ????
+    if (x_snake_position < 0) {
+        x_snake_position = tile_size - 1;
+    }
+
+    // ????
+    if (x_snake_position > tile_size - 1) {
+        x_snake_position = 0;
+    }
+
+    // ????
+    if (y_snake_position < 0) {
+        y_snake_position = tile_size - 1;
+    }
+
+    // ????
+    if (y_snake_position > tile_size - 1) {
+        y_snake_position = 0;
+    }
+
+    context.fillStyle = "black";
+    context.fillRect(0, 0, board.width, board.height);
+
+    context.fillStyle = "lime";
+
+    for(var i=0; i < trail.length; i++) {
+        var ivan = context.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
+        console.log('ivan = '+ivan);
+        // Check if snake hit it self
+        if (trail[i].x == x_snake_position && trail[i].y == y_snake_position) {
+            // reset tail
+            tail = 5;
+        }
+    }
+
+    // Save snake position x,y
+    trail.push({x: x_snake_position, y: y_snake_position});
+
+    // Trail array not too long
+    while (trail.length > tail) {
+        trail.shift();
+    }
+
+    // Check if snake ate the apple
+    if (x_apple == x_snake_position && y_apple == y_snake_position) {
+        tail++;
+        x_apple = Math.floor(Math.random() * tile_size);
+        y_apple = Math.floor(Math.random() * tile_size);
+    }
+
+    context.fillStyle = "red";
+    context.fillRect(x_apple * grid_size, y_apple * grid_size, grid_size - 2, grid_size - 2);
+
+}
+
+window.onload = function () {
+
+    board = document.getElementById("board");
+
+    context = board.getContext("2d");
+
+    document.addEventListener("keydown", keyPush);
+    setInterval(game, 1000 / 15);
+};
+</script>
