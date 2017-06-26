@@ -1,10 +1,14 @@
 <canvas id="board" width="400" height="400"></canvas>
+<h1 id="score">Score: 0</h1>
 <script>
 
 "use strict";
 
 var board = "";
+var score = "";
 var context = "";
+
+var score_points = 0;
 
 var x_velocity = 0;
 var y_velocity = 0;
@@ -103,6 +107,8 @@ function game() {
         tail++;
         x_apple = Math.floor(Math.random() * tile_size);
         y_apple = Math.floor(Math.random() * tile_size);
+        score_points++;
+        score.innerHTML = "Score: " + score_points;
     }
 
     context.fillStyle = "red";
@@ -113,6 +119,7 @@ function game() {
 window.onload = function () {
 
     board = document.getElementById("board");
+    score = document.getElementById("score");
 
     context = board.getContext("2d");
 
